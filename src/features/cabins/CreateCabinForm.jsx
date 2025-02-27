@@ -9,7 +9,7 @@ import Textarea from "../../ui/Textarea";
 import FormRowComponent from "../../ui/FormRowComponent";
 import { useCreateCabin } from "./useCreateCabin";
 
-function CreateCabinForm({ cabinToEdit = {} }) {
+function CreateCabinForm({ cabinToEdit = {}, onClose }) {
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
 
@@ -21,10 +21,19 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
   function onSubmit(data) {
     if (isEditSession) mutate({ ...data, image: data.image, id: editId });
-    else mutate({ ...data, image: data.image }, { onSuccess: () => reset() });
+    else
+      mutate(
+        { ...data, image: data.image },
+        {
+          onSuccess: () => {
+            reset();
+            onClose?.();
+          },
+        }
+      );
   }
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)} type={onClose ? "modal" : ""}>
       <FormRowComponent label={"Name"} error={errors?.name?.message}>
         <Input
           type="text"
@@ -112,7 +121,12 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
       <FormRowComponent>
         {/* type is an HTML attribute! */}
-        <Button variation="secondary" type="reset" size="medium">
+        <Button
+          variation="secondary"
+          type="reset"
+          size="medium"
+          onClick={() => onClose?.()}
+        >
           Cancel
         </Button>
         <Button variation="primary" size="medium" disabled={isPending}>

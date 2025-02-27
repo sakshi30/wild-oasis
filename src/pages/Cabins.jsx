@@ -13,7 +13,7 @@ function Cabins() {
       <Row>
         <CabinTable />
       </Row>
-      <AddCabin />
+      <AddCabin content={"Create New Cabin"} />
     </>
   );
 }

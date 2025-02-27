@@ -33,3 +33,9 @@ const FilterButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
+
+function Filter() {
+  return <div></div>;
+}
+
+export default Filter;

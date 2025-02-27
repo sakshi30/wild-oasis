@@ -3,7 +3,6 @@ import toast from "react-hot-toast";
 import { createCabin, editCabin } from "../../services/apiCabins";
 
 export function useCreateCabin({ isEditSession }) {
-  console.log(isEditSession);
   const queryClient = useQueryClient();
 
   const { mutate, isPending } = useMutation({

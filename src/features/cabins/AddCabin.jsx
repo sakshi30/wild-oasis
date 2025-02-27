@@ -1,26 +1,37 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import Modal from "../../ui/Modal";
 import CreateCabinForm from "./CreateCabinForm";
 import Button from "../../ui/Button";
 
-function AddCabin() {
+function AddCabin({ content, cabinToEdit }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   return (
-    <div>
-      <Button
-        onClick={() => setIsOpenModal((show) => !show)}
-        variation="primary"
-        size="large"
-      >
-        Create New Cabin
-      </Button>
+    <>
+      {!cabinToEdit && (
+        <Button
+          onClick={() => setIsOpenModal((show) => !show)}
+          variation="primary"
+          size="large"
+        >
+          {content}
+        </Button>
+      )}
+      {cabinToEdit && (
+        <button onClick={() => setIsOpenModal((show) => !show)}>
+          {content}
+        </button>
+      )}
       {isOpenModal && (
-        <Modal>
-          <CreateCabinForm />
+        <Modal onClose={() => setIsOpenModal(false)}>
+          <CreateCabinForm
+            onClose={() => setIsOpenModal(false)}
+            cabinToEdit={cabinToEdit}
+          />
         </Modal>
       )}
-    </div>
+    </>
   );
 }
 

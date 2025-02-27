@@ -1,24 +1,12 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
-import { useState } from "react";
-
-import CreateCabinForm from "./CreateCabinForm";
-import { useDeleteCabin } from "./useDeleteCabin";
 import { formatCurrency } from "../../utils/helpers";
-import { HiPencil, HiSquare2Stack, HiTrash } from "react-icons/hi2";
+import { useDeleteCabin } from "./useDeleteCabin";
+import { HiPencilSquare, HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import { useCreateCabin } from "./useCreateCabin";
-
-const TableRow = styled.div`
-  display: grid;
-  grid-template-columns: 0.6fr 1.8fr 2.2fr 1fr 1fr 1fr;
-  column-gap: 2.4rem;
-  align-items: center;
-  padding: 1.4rem 2.4rem;
-
-  &:not(:last-child) {
-    border-bottom: 1px solid var(--color-grey-100);
-  }
-`;
+import AddCabin from "./AddCabin";
+import DeleteCabin from "./DeleteCabin";
+import Table from "../../ui/Table";
 
 const Img = styled.img`
   display: block;
@@ -48,19 +36,11 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }) {
-  const [showForm, setShowForm] = useState(false);
-  const { isDeleting, deleteCabin } = useDeleteCabin();
-  const { isCreating, createCabin } = useCreateCabin();
-
-  const {
-    id: cabinId,
-    name,
-    maxCapacity,
-    regularPrice,
-    discount,
-    image,
-    description,
-  } = cabin;
+  // const [showForm, setShowForm] = useState(false);
+  const { isPending, mutate } = useDeleteCabin();
+  const { id, image, discount, name, regularPrice, maxCapacity, description } =
+    cabin;
+  const { mutate: createCabin, isPending: isCreating } = useCreateCabin(false);
 
   function handleDuplicate() {
     createCabin({
@@ -72,32 +52,33 @@ function CabinRow({ cabin }) {
       description,
     });
   }
-
   return (
     <>
-      <TableRow role="row">
-        <Img src={image} />
+      <Table.Row>
+        <Img src={image} alt="name" />
         <Cabin>{name}</Cabin>
-        <div>Fits up to {maxCapacity} guests</div>
+        <div>Fits upto {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice)}</Price>
-        {discount ? (
+        {discount > 0 ? (
           <Discount>{formatCurrency(discount)}</Discount>
         ) : (
-          <span>&mdash;</span>
+          <span>-</span>
         )}
-        <div>
-          <button disabled={isCreating} onClick={handleDuplicate}>
+        <div className="flex flex-row space-x-6">
+          <button onClick={handleDuplicate} disabled={isCreating}>
             <HiSquare2Stack />
           </button>
-          <button onClick={() => setShowForm((show) => !show)}>
-            <HiPencil />
-          </button>
-          <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>
+          <AddCabin content={<HiPencilSquare />} cabinToEdit={cabin} />
+          {/* <button disabled={isPending} onClick={() => mutate(id)}>
             <HiTrash />
-          </button>
+          </button> */}
+          <DeleteCabin
+            content={<HiTrash />}
+            disabled={isPending}
+            onConfirm={() => mutate(id)}
+          />
         </div>
-      </TableRow>
-      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
+      </Table.Row>
     </>
   );
 }
