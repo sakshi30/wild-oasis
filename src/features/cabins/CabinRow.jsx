@@ -2,11 +2,14 @@
 import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
 import { useDeleteCabin } from "./useDeleteCabin";
-import { HiPencilSquare, HiSquare2Stack, HiTrash } from "react-icons/hi2";
+import { HiSquare2Stack, HiTrash } from "react-icons/hi2";
 import { useCreateCabin } from "./useCreateCabin";
-import AddCabin from "./AddCabin";
-import DeleteCabin from "./DeleteCabin";
 import Table from "../../ui/Table";
+import Modal from "../../ui/Modal";
+import { HiPencil } from "react-icons/hi";
+import Menus from "../../ui/Menus";
+import ConfirmDelete from "../../ui/ConfirmDelete";
+import CreateCabinForm from "./CreateCabinForm";
 
 const Img = styled.img`
   display: block;
@@ -40,7 +43,7 @@ function CabinRow({ cabin }) {
   const { isPending, mutate } = useDeleteCabin();
   const { id, image, discount, name, regularPrice, maxCapacity, description } =
     cabin;
-  const { mutate: createCabin, isPending: isCreating } = useCreateCabin(false);
+  const { mutate: createCabin } = useCreateCabin(false);
 
   function handleDuplicate() {
     createCabin({
@@ -64,19 +67,42 @@ function CabinRow({ cabin }) {
         ) : (
           <span>-</span>
         )}
-        <div className="flex flex-row space-x-6">
-          <button onClick={handleDuplicate} disabled={isCreating}>
-            <HiSquare2Stack />
-          </button>
-          <AddCabin content={<HiPencilSquare />} cabinToEdit={cabin} />
-          {/* <button disabled={isPending} onClick={() => mutate(id)}>
-            <HiTrash />
-          </button> */}
-          <DeleteCabin
-            content={<HiTrash />}
-            disabled={isPending}
-            onConfirm={() => mutate(id)}
-          />
+        <div>
+          <Modal>
+            {" "}
+            <Menus.Menu>
+              <Menus.Toggle id={id} />
+
+              <Menus.List id={id}>
+                <Menus.Button
+                  icon={<HiSquare2Stack />}
+                  onClick={handleDuplicate}
+                >
+                  Duplicate
+                </Menus.Button>
+
+                <Modal.Open opens="edit">
+                  <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
+                </Modal.Open>
+
+                <Modal.Open opens="delete">
+                  <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+                </Modal.Open>
+              </Menus.List>
+
+              <Modal.Window name="edit">
+                <CreateCabinForm cabinToEdit={cabin} />
+              </Modal.Window>
+
+              <Modal.Window name="delete">
+                <ConfirmDelete
+                  resourceName={"cabin"}
+                  onConfirm={() => mutate(id)}
+                  disabled={isPending}
+                />
+              </Modal.Window>
+            </Menus.Menu>
+          </Modal>
         </div>
       </Table.Row>
     </>

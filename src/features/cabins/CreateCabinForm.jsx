@@ -12,15 +12,22 @@ import { useCreateCabin } from "./useCreateCabin";
 function CreateCabinForm({ cabinToEdit = {}, onClose }) {
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
-
-  const { mutate, isPending } = useCreateCabin(isEditSession);
+  const { mutate, isPending } = useCreateCabin({ isEditSession });
   const { register, handleSubmit, reset, formState } = useForm({
     defaultValues: isEditSession ? editValues : {},
   });
   const { errors } = formState;
 
   function onSubmit(data) {
-    if (isEditSession) mutate({ ...data, image: data.image, id: editId });
+    if (isEditSession)
+      mutate(
+        { ...data, image: data.image, id: editId },
+        {
+          onSuccess: () => {
+            onClose?.();
+          },
+        }
+      );
     else
       mutate(
         { ...data, image: data.image },
