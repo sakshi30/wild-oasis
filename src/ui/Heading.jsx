@@ -13,6 +13,13 @@ const Heading = styled.h1`
       font-size: 2rems;
       font-weight: 600;
     `}
+    ${(props) =>
+    props.as === "h3" &&
+    css`
+      font-size: 3rems;
+      font-weight: 800;
+      text-align: center;
+    `}
 `;
 
 export default Heading;

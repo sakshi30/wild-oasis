@@ -18,7 +18,7 @@ function Cabins() {
         </Row>
       </Row>
 
-      <AddCabin content={"Create New Cabin"} />
+      <AddCabin />
     </>
   );
 }
