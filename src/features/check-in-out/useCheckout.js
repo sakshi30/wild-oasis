@@ -9,9 +9,9 @@ function useCheckout() {
     mutationFn: (bookingId) => {
       updateBooking(bookingId, { status: "checked-out" });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Booking has been successfully updated");
-      queryClient.invalidateQueries({ active: true });
+      queryClient.invalidateQueries({ queryKey: ["booking", data] });
     },
     onError: () => {
       toast.error("Unable to edit the booking");
