@@ -126,7 +126,7 @@ function CreateCabinForm({ cabinToEdit = {}, onClose }) {
         />
       </FormRowComponent>
 
-      <FormRowComponent>
+      <FormRowComponent isActionRow>
         {/* type is an HTML attribute! */}
         <Button
           variation="secondary"

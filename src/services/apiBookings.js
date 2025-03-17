@@ -114,8 +114,30 @@ export async function deleteBooking(id) {
   const { data, error } = await supabase.from("bookings").delete().eq("id", id);
 
   if (error) {
-    console.error(error);
     throw new Error("Booking could not be deleted");
+  }
+  return data;
+}
+
+export async function createBooking(params) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .insert([params])
+    .select();
+  if (error) {
+    throw new Error("Booking could not be added");
+  }
+  return data;
+}
+
+export async function editBooking(params) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .update(params)
+    .eq("id", params.id)
+    .select();
+  if (error) {
+    throw new Error("Booking could not be added");
   }
   return data;
 }

@@ -15,6 +15,7 @@ import Checkbox from "../../ui/Checkbox";
 import { formatCurrency } from "../../utils/helpers";
 import useCheckin from "./useCheckin";
 import { useSettings } from "../settings/useSettings";
+import { useParams } from "react-router-dom";
 
 const Box = styled.div`
   /* Box */
@@ -28,7 +29,9 @@ function CheckinBooking() {
   const moveBack = useMoveBack();
   const [confirmPaid, setConfirmPaid] = useState(false);
   const [addBreakfast, setAddBreakfast] = useState(false);
-  const { isPending, booking = {} } = useBooking();
+  const { bookingId: id } = useParams();
+
+  const { isPending, booking = {} } = useBooking({ id });
   const { isUpdating, editBooking } = useCheckin();
   const { isLoadingSettings, settings = {} } = useSettings();
   const {

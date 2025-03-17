@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
 
@@ -22,11 +21,13 @@ const FormRow = styled.div`
     border-bottom: 1px solid var(--color-grey-100);
   }
 
-  &:has(button) {
+  ${({ $isActionRow }) =>
+    $isActionRow &&
+    `
     display: flex;
     justify-content: flex-end;
     gap: 1.2rem;
-  }
+  `}
 `;
 
 const Label = styled.label`
@@ -38,9 +39,9 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-function FormRowComponent({ label, error, children, orientation }) {
+function FormRowComponent({ label, error, children, isActionRow = false }) {
   return (
-    <FormRow>
+    <FormRow $isActionRow={isActionRow}>
       {label && <Label htmlFor={label}>{label}</Label>}
       {children}
       {error && <Error>{error}</Error>}

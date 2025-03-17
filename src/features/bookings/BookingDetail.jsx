@@ -12,7 +12,7 @@ import useBooking from "./useBooking";
 import Spinner from "../../ui/Spinner";
 import BookingDataBox from "./BookingDataBox";
 import { HiArrowDownOnSquare, HiArrowUpOnSquare } from "react-icons/hi2";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useCheckout from "../check-in-out/useCheckout";
 import useDeleteBooking from "./useDeleteBooking";
 import Modal from "../../ui/Modal";
@@ -32,7 +32,9 @@ const statusToTagName = {
 };
 
 function BookingDetail() {
-  const { isPending, booking = {} } = useBooking();
+  const { bookingId: id } = useParams();
+
+  const { isPending, booking = {} } = useBooking({ id });
   const { isUpdating, checkoutBooking } = useCheckout();
   const { status, id: bookingId } = booking;
   const moveBack = useMoveBack();
